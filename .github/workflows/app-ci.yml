@@ -38,16 +38,16 @@ jobs:
       with:
         repository: sivasuryaganesh/aks-gitops
         token: ${{ secrets.GH_PAT }}
-        path: gitops
+        path: aks-gitops
 
     - name: Update Helm Tag
       run: |
         sed -i 's/tag:.*/tag: "${{ github.sha }}"/' \
-        gitops/helm/python-app/values.yaml
+        aks-gitops/helm/app-python/values.yaml
 
     - name: Commit Changes
       run: |
-        cd gitops
+        cd aks-gitops
 
         git config user.email "githubactions@github.com"
         git config user.name "github-actions"
