@@ -1,0 +1,58 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout App Repo
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Login to ACR
+      run: az acr login --name myacrdevops12345
+
+    - name: Build Docker Image
+      run: |
+        docker build \
+        -t myacrdevops12345.azurecr.io/python-app:${{ github.sha }} .
+
+    - name: Push Image
+      run: |
+        docker push \
+        myacrdevops12345.azurecr.io/python-app:${{ github.sha }}
+
+    - name: Checkout GitOps Repo
+      uses: actions/checkout@v4
+      with:
+        repository: YOUR_USERNAME/aks-gitops-repo
+        token: ${{ secrets.GH_PAT }}
+        path: gitops
+
+    - name: Update Helm Tag
+      run: |
+        sed -i 's/tag:.*/tag: "${{ github.sha }}"/' \
+        gitops/helm/python-app/values.yaml
+
+    - name: Commit Changes
+      run: |
+        cd gitops
+
+        git config user.email "githubactions@github.com"
+        git config user.name "github-actions"
+
+        git add .
+        git commit -m "Updated image tag"
+
+        git push
