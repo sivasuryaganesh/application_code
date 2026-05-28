@@ -45,7 +45,7 @@ def about():
             "Kubernetes",
             "ArgoCD"
         ],
-        "environment": "Test"
+        "environment": "test"
     })
 
 
