@@ -48,11 +48,8 @@ jobs:
     - name: Commit Changes
       run: |
         cd aks-gitops
-
         git config user.email "githubactions@github.com"
         git config user.name "github-actions"
-
         git add .
         git commit -m "Updated image tags"
-
         git push

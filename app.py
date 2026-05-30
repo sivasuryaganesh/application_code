@@ -4,8 +4,7 @@ import socket
 
 app = Flask(__name__)
 
-APP_NAME = "AKS GitOps Demo App v.3.0"
-
+APP_NAME = "AKS GitOps Test App v.4.0 Improved with scalability, availability and cronjob feature with security"
 
 # Home API
 @app.route("/")
